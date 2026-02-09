@@ -19,9 +19,16 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
     "License :: OSI Approved :: MIT License",
 ]
-dependencies = []
+dependencies = [
+    "oro-db>=0.1.0",
+    "openai>=1.0",
+]
 
 [project.optional-dependencies]
+local = [
+    "sentence-transformers>=2.2.0",
+    "numpy>=1.24",
+]
 dev = [
     "pytest>=8.0",
     "pytest-asyncio>=0.23",
@@ -30,6 +37,7 @@ dev = [
     "ruff>=0.4",
     "mypy>=1.10",
     "pre-commit>=3.7",
+    "numpy>=1.24",
 ]
 
 [tool.hatch.build.targets.wheel]
@@ -52,6 +60,19 @@ disallow_untyped_defs = true
 strict_optional = true
 warn_redundant_casts = true
 warn_unused_ignores = true
+
+[[tool.mypy.overrides]]
+module = [
+    "oro_db",
+    "oro_db.*",
+    "openai",
+    "openai.*",
+    "sentence_transformers",
+    "sentence_transformers.*",
+    "numpy",
+    "numpy.*",
+]
+ignore_missing_imports = true
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

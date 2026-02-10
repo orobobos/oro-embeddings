@@ -24,6 +24,10 @@ dependencies = [
     "openai>=1.0",
 ]
 
+[project.urls]
+Homepage = "https://github.com/ourochronos/our-embeddings"
+Repository = "https://github.com/ourochronos/our-embeddings"
+
 [project.optional-dependencies]
 local = [
     "sentence-transformers>=2.2.0",

@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "oro-embeddings"
+name = "our-embeddings"
 version = "0.1.0"
 description = "Vector embedding generation and similarity search"
 readme = "README.md"
@@ -20,7 +20,7 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
 ]
 dependencies = [
-    "oro-db>=0.1.0",
+    "our-db>=0.1.0",
     "openai>=1.0",
 ]
 
@@ -41,7 +41,7 @@ dev = [
 ]
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/oro_embeddings"]
+packages = ["src/our_embeddings"]
 
 [tool.ruff]
 target-version = "py311"
@@ -52,7 +52,7 @@ src = ["src", "tests"]
 select = ["E", "F", "I", "N", "W", "UP", "B", "C4"]
 
 [tool.ruff.lint.isort]
-known-first-party = ["oro_embeddings"]
+known-first-party = ["our_embeddings"]
 
 [tool.mypy]
 python_version = "3.11"
@@ -63,8 +63,8 @@ warn_unused_ignores = true
 
 [[tool.mypy.overrides]]
 module = [
-    "oro_db",
-    "oro_db.*",
+    "our_db",
+    "our_db.*",
     "openai",
     "openai.*",
     "sentence_transformers",
@@ -85,7 +85,7 @@ markers = [
 
 [tool.coverage.run]
 branch = true
-source = ["src/oro_embeddings"]
+source = ["src/our_embeddings"]
 
 [tool.coverage.report]
 show_missing = true

@@ -1,4 +1,4 @@
-"""Shared test fixtures for oro-embeddings."""
+"""Shared test fixtures for our-embeddings."""
 
 from __future__ import annotations
 
@@ -7,7 +7,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from oro_embeddings.config import clear_config_cache
+from our_embeddings.config import clear_config_cache
 
 
 def pytest_configure(config: pytest.Config) -> None:
@@ -41,7 +41,7 @@ def env_with_openai_key(monkeypatch: pytest.MonkeyPatch) -> None:
 @pytest.fixture
 def mock_openai() -> MagicMock:
     """Mock OpenAI client for embedding generation."""
-    with patch("oro_embeddings.service.OpenAI") as mock_class:
+    with patch("our_embeddings.service.OpenAI") as mock_class:
         mock_client = MagicMock()
         mock_class.return_value = mock_client
 

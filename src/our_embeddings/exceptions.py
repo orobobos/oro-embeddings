@@ -1,4 +1,4 @@
-"""Exception hierarchy for oro-embeddings."""
+"""Exception hierarchy for our-embeddings."""
 
 from __future__ import annotations
 

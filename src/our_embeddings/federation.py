@@ -150,7 +150,7 @@ async def prepare_belief_for_federation(
         ValueError: If belief not found
         EmbeddingError: If embedding generation fails
     """
-    from oro_db import get_cursor
+    from our_db import get_cursor
 
     from .providers.local import generate_embedding
 

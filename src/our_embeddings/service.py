@@ -19,8 +19,8 @@ from enum import StrEnum
 from typing import Any
 
 from openai import OpenAI
-from oro_db import get_cursor
-from oro_db.exceptions import DatabaseError
+from our_db import get_cursor
+from our_db.exceptions import DatabaseError
 
 from .config import get_config
 from .exceptions import EmbeddingError

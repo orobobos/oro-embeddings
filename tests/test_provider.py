@@ -7,8 +7,8 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from oro_embeddings.config import clear_config_cache
-from oro_embeddings.service import (
+from our_embeddings.config import clear_config_cache
+from our_embeddings.service import (
     EmbeddingProvider,
     generate_embedding,
     generate_local_embedding,
@@ -79,7 +79,7 @@ class TestLocalEmbedding:
     def mock_local_model(self):
         import numpy as np
 
-        from oro_embeddings.providers import local
+        from our_embeddings.providers import local
 
         mock_model = MagicMock()
         normalized_vec = np.random.randn(384).astype(np.float32)
@@ -103,7 +103,7 @@ class TestLocalEmbedding:
 class TestGenerateEmbedding:
     @pytest.fixture
     def mock_openai(self):
-        with patch("oro_embeddings.service.get_openai_client") as mock:
+        with patch("our_embeddings.service.get_openai_client") as mock:
             client = MagicMock()
             mock.return_value = client
             response = MagicMock()
@@ -115,7 +115,7 @@ class TestGenerateEmbedding:
     def mock_local_model(self):
         import numpy as np
 
-        from oro_embeddings.providers import local
+        from our_embeddings.providers import local
 
         mock_model = MagicMock()
         normalized_vec = np.random.randn(384).astype(np.float32)

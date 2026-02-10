@@ -8,30 +8,30 @@ from unittest.mock import MagicMock, patch
 import numpy as np
 import pytest
 
-from oro_embeddings.config import clear_config_cache
+from our_embeddings.config import clear_config_cache
 
 
 class TestIsLocalPath:
     def test_absolute_path_detected(self, tmp_path):
-        from oro_embeddings.providers import local
+        from our_embeddings.providers import local
 
         model_dir = tmp_path / "model"
         model_dir.mkdir()
         assert local._is_local_path(str(model_dir)) is True
 
     def test_relative_path_detected(self):
-        from oro_embeddings.providers import local
+        from our_embeddings.providers import local
 
         assert local._is_local_path("./models/bge") is True
         assert local._is_local_path("../models/bge") is True
 
     def test_home_path_detected(self):
-        from oro_embeddings.providers import local
+        from our_embeddings.providers import local
 
         assert local._is_local_path("~/models/bge") is True
 
     def test_huggingface_model_name_not_local(self):
-        from oro_embeddings.providers import local
+        from our_embeddings.providers import local
 
         assert local._is_local_path("BAAI/bge-small-en-v1.5") is False
         assert local._is_local_path("sentence-transformers/all-MiniLM-L6-v2") is False
@@ -39,7 +39,7 @@ class TestIsLocalPath:
 
 class TestGetModel:
     def test_lazy_loading(self):
-        from oro_embeddings.providers import local
+        from our_embeddings.providers import local
 
         local.reset_model()
         mock_model = MagicMock()
@@ -51,7 +51,7 @@ class TestGetModel:
             assert model is mock_model
 
     def test_reuses_cached_model(self):
-        from oro_embeddings.providers import local
+        from our_embeddings.providers import local
 
         mock_model = MagicMock()
         local._model = mock_model
@@ -59,7 +59,7 @@ class TestGetModel:
         assert result is mock_model
 
     def test_respects_device_env(self):
-        from oro_embeddings.providers import local
+        from our_embeddings.providers import local
 
         local.reset_model()
         mock_model = MagicMock()
@@ -77,7 +77,7 @@ class TestGetModel:
                 clear_config_cache()
 
     def test_respects_model_path_env(self):
-        from oro_embeddings.providers import local
+        from our_embeddings.providers import local
 
         local.reset_model()
         mock_model = MagicMock()
@@ -107,7 +107,7 @@ class TestGenerateEmbedding:
         return model
 
     def test_returns_list_of_floats(self, mock_model):
-        from oro_embeddings.providers import local
+        from our_embeddings.providers import local
 
         local._model = mock_model
         result = local.generate_embedding("test text")
@@ -115,14 +115,14 @@ class TestGenerateEmbedding:
         assert all(isinstance(x, float) for x in result)
 
     def test_returns_384_dimensions(self, mock_model):
-        from oro_embeddings.providers import local
+        from our_embeddings.providers import local
 
         local._model = mock_model
         result = local.generate_embedding("test text")
         assert len(result) == 384
 
     def test_l2_normalized(self, mock_model):
-        from oro_embeddings.providers import local
+        from our_embeddings.providers import local
 
         local._model = mock_model
         result = local.generate_embedding("test text")
@@ -130,7 +130,7 @@ class TestGenerateEmbedding:
         assert abs(norm - 1.0) < 0.001
 
     def test_calls_encode_with_normalize(self, mock_model):
-        from oro_embeddings.providers import local
+        from our_embeddings.providers import local
 
         local._model = mock_model
         local.generate_embedding("test text")
@@ -155,7 +155,7 @@ class TestGenerateEmbeddingsBatch:
         return model
 
     def test_returns_list_of_embeddings(self, mock_model):
-        from oro_embeddings.providers import local
+        from our_embeddings.providers import local
 
         local._model = mock_model
         texts = ["text 1", "text 2", "text 3"]
@@ -164,7 +164,7 @@ class TestGenerateEmbeddingsBatch:
         assert len(result) == 3
 
     def test_each_embedding_384_dimensions(self, mock_model):
-        from oro_embeddings.providers import local
+        from our_embeddings.providers import local
 
         local._model = mock_model
         result = local.generate_embeddings_batch(["text 1", "text 2"])
@@ -172,7 +172,7 @@ class TestGenerateEmbeddingsBatch:
             assert len(emb) == 384
 
     def test_respects_batch_size(self, mock_model):
-        from oro_embeddings.providers import local
+        from our_embeddings.providers import local
 
         local._model = mock_model
         local.generate_embeddings_batch(["text"] * 10, batch_size=5)
@@ -180,7 +180,7 @@ class TestGenerateEmbeddingsBatch:
         assert call_kwargs.get("batch_size") == 5
 
     def test_shows_progress_for_large_batches(self, mock_model):
-        from oro_embeddings.providers import local
+        from our_embeddings.providers import local
 
         local._model = mock_model
         local.generate_embeddings_batch(["text"] * 150)
@@ -188,7 +188,7 @@ class TestGenerateEmbeddingsBatch:
         assert call_kwargs.get("show_progress_bar") is True
 
     def test_no_progress_for_small_batches(self, mock_model):
-        from oro_embeddings.providers import local
+        from our_embeddings.providers import local
 
         local._model = mock_model
         local.generate_embeddings_batch(["text"] * 50)
@@ -198,7 +198,7 @@ class TestGenerateEmbeddingsBatch:
 
 class TestServiceIntegration:
     def test_local_provider_default(self):
-        from oro_embeddings.service import EmbeddingProvider, get_embedding_provider
+        from our_embeddings.service import EmbeddingProvider, get_embedding_provider
 
         with patch.dict(os.environ, {}, clear=True):
             os.environ.pop("VALENCE_EMBEDDING_PROVIDER", None)
@@ -210,7 +210,7 @@ class TestServiceIntegration:
                 clear_config_cache()
 
     def test_openai_provider_override(self):
-        from oro_embeddings.service import EmbeddingProvider, get_embedding_provider
+        from our_embeddings.service import EmbeddingProvider, get_embedding_provider
 
         with patch.dict(os.environ, {"VALENCE_EMBEDDING_PROVIDER": "openai"}):
             clear_config_cache()
@@ -221,12 +221,12 @@ class TestServiceIntegration:
                 clear_config_cache()
 
     def test_generate_embedding_uses_local(self):
-        from oro_embeddings import service
-        from oro_embeddings.providers import local
+        from our_embeddings import service
+        from our_embeddings.providers import local
 
         mock_embedding = [0.1] * 384
         with patch.object(local, "_model", MagicMock()):
-            with patch("oro_embeddings.providers.local.generate_embedding", return_value=mock_embedding):
+            with patch("our_embeddings.providers.local.generate_embedding", return_value=mock_embedding):
                 with patch.dict(os.environ, {"VALENCE_EMBEDDING_PROVIDER": "local"}):
                     result = service.generate_embedding("test", provider=service.EmbeddingProvider.LOCAL)
                     assert result == mock_embedding
@@ -234,7 +234,7 @@ class TestServiceIntegration:
 
 class TestResetModel:
     def test_clears_cached_model(self):
-        from oro_embeddings.providers import local
+        from our_embeddings.providers import local
 
         local._model = MagicMock()
         local.reset_model()
@@ -243,7 +243,7 @@ class TestResetModel:
 
 class TestOfflineSupport:
     def test_loads_from_local_path(self, tmp_path):
-        from oro_embeddings.providers import local
+        from our_embeddings.providers import local
 
         local.reset_model()
         model_dir = tmp_path / "my-model"
@@ -263,8 +263,8 @@ class TestOfflineSupport:
                 clear_config_cache()
 
     def test_error_for_missing_local_path(self, tmp_path):
-        from oro_embeddings.providers import local
-        from oro_embeddings.providers.local import ModelLoadError
+        from our_embeddings.providers import local
+        from our_embeddings.providers.local import ModelLoadError
 
         local.reset_model()
         nonexistent_path = tmp_path / "does-not-exist"
@@ -281,8 +281,8 @@ class TestOfflineSupport:
                 clear_config_cache()
 
     def test_error_for_network_failure(self):
-        from oro_embeddings.providers import local
-        from oro_embeddings.providers.local import ModelLoadError
+        from our_embeddings.providers import local
+        from our_embeddings.providers.local import ModelLoadError
 
         local.reset_model()
         network_error = OSError("Connection error: could not resolve hostname")
@@ -299,14 +299,14 @@ class TestOfflineSupport:
                 clear_config_cache()
 
     def test_model_load_error_is_exception(self):
-        from oro_embeddings.providers.local import ModelLoadError
+        from our_embeddings.providers.local import ModelLoadError
 
         assert issubclass(ModelLoadError, Exception)
         error = ModelLoadError("test message")
         assert str(error) == "test message"
 
     def test_huggingface_name_not_treated_as_local(self):
-        from oro_embeddings.providers import local
+        from our_embeddings.providers import local
 
         local.reset_model()
         mock_model = MagicMock()

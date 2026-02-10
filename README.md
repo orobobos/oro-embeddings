@@ -1,4 +1,4 @@
-# oro-embeddings
+# our-embeddings
 
 Vector embedding generation and similarity search
 
@@ -9,13 +9,13 @@ _Brief description of what this brick does and why it exists._
 ## Install
 
 ```bash
-pip install oro-embeddings
+pip install our-embeddings
 ```
 
 ## Usage
 
 ```python
-from oro_embeddings import ...
+from our_embeddings import ...
 ```
 
 ## API

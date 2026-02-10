@@ -11,7 +11,7 @@ class TestFederationStandard:
 
     def test_federation_standard_constants(self):
         """Test that federation constants are defined correctly."""
-        from oro_embeddings.federation import (
+        from our_embeddings.federation import (
             FEDERATION_EMBEDDING_DIMS,
             FEDERATION_EMBEDDING_MODEL,
             FEDERATION_EMBEDDING_TYPE,
@@ -25,7 +25,7 @@ class TestFederationStandard:
 
     def test_get_federation_standard_returns_dict(self):
         """Test get_federation_standard returns complete specification."""
-        from oro_embeddings.federation import get_federation_standard
+        from our_embeddings.federation import get_federation_standard
 
         standard = get_federation_standard()
 
@@ -38,7 +38,7 @@ class TestFederationStandard:
 
     def test_get_federation_standard_immutable(self):
         """Test that returned standard doesn't affect internal state."""
-        from oro_embeddings.federation import get_federation_standard
+        from our_embeddings.federation import get_federation_standard
 
         standard1 = get_federation_standard()
         standard1["model"] = "modified"
@@ -51,26 +51,26 @@ class TestFederationCompatibility:
     """Tests for is_federation_compatible()."""
 
     def test_compatible_embedding(self):
-        from oro_embeddings.federation import is_federation_compatible
+        from our_embeddings.federation import is_federation_compatible
 
         assert is_federation_compatible("bge_small_en_v15", 384) is True
 
     def test_incompatible_wrong_type(self):
-        from oro_embeddings.federation import is_federation_compatible
+        from our_embeddings.federation import is_federation_compatible
 
         assert is_federation_compatible("text_embedding_3_small", 384) is False
         assert is_federation_compatible("openai_ada", 384) is False
         assert is_federation_compatible("", 384) is False
 
     def test_incompatible_wrong_dimensions(self):
-        from oro_embeddings.federation import is_federation_compatible
+        from our_embeddings.federation import is_federation_compatible
 
         assert is_federation_compatible("bge_small_en_v15", 1536) is False
         assert is_federation_compatible("bge_small_en_v15", 768) is False
         assert is_federation_compatible("bge_small_en_v15", 0) is False
 
     def test_incompatible_none_values(self):
-        from oro_embeddings.federation import is_federation_compatible
+        from our_embeddings.federation import is_federation_compatible
 
         assert is_federation_compatible(None, 384) is False
         assert is_federation_compatible("bge_small_en_v15", None) is False
@@ -85,7 +85,7 @@ class TestEmbeddingValidation:
         return values
 
     def test_valid_embedding(self):
-        from oro_embeddings.federation import validate_federation_embedding
+        from our_embeddings.federation import validate_federation_embedding
 
         embedding = self._make_normalized_embedding(384)
         is_valid, error = validate_federation_embedding(embedding)
@@ -94,7 +94,7 @@ class TestEmbeddingValidation:
         assert error is None
 
     def test_none_embedding(self):
-        from oro_embeddings.federation import validate_federation_embedding
+        from our_embeddings.federation import validate_federation_embedding
 
         is_valid, error = validate_federation_embedding(None)
 
@@ -102,7 +102,7 @@ class TestEmbeddingValidation:
         assert "None" in error
 
     def test_wrong_type(self):
-        from oro_embeddings.federation import validate_federation_embedding
+        from our_embeddings.federation import validate_federation_embedding
 
         is_valid, error = validate_federation_embedding("not a list")
 
@@ -110,7 +110,7 @@ class TestEmbeddingValidation:
         assert "list" in error.lower()
 
     def test_wrong_dimensions(self):
-        from oro_embeddings.federation import validate_federation_embedding
+        from our_embeddings.federation import validate_federation_embedding
 
         embedding = self._make_normalized_embedding(1536)
         is_valid, error = validate_federation_embedding(embedding)
@@ -120,7 +120,7 @@ class TestEmbeddingValidation:
         assert "1536" in error
 
     def test_nan_values(self):
-        from oro_embeddings.federation import validate_federation_embedding
+        from our_embeddings.federation import validate_federation_embedding
 
         embedding = self._make_normalized_embedding(384)
         embedding[0] = float("nan")
@@ -130,7 +130,7 @@ class TestEmbeddingValidation:
         assert "invalid" in error.lower() or "nan" in error.lower()
 
     def test_inf_values(self):
-        from oro_embeddings.federation import validate_federation_embedding
+        from our_embeddings.federation import validate_federation_embedding
 
         embedding = self._make_normalized_embedding(384)
         embedding[0] = float("inf")
@@ -140,7 +140,7 @@ class TestEmbeddingValidation:
         assert "invalid" in error.lower() or "inf" in error.lower()
 
     def test_non_normalized_embedding(self):
-        from oro_embeddings.federation import validate_federation_embedding
+        from our_embeddings.federation import validate_federation_embedding
 
         embedding = [0.5] * 384
         is_valid, error = validate_federation_embedding(embedding)
@@ -149,7 +149,7 @@ class TestEmbeddingValidation:
         assert "normalized" in error.lower()
 
     def test_zero_vector_fails(self):
-        from oro_embeddings.federation import validate_federation_embedding
+        from our_embeddings.federation import validate_federation_embedding
 
         embedding = [0.0] * 384
         is_valid, error = validate_federation_embedding(embedding)
@@ -165,7 +165,7 @@ class TestIncomingBeliefValidation:
         return [1.0 / math.sqrt(dims)] * dims
 
     def test_valid_belief_with_embedding(self):
-        from oro_embeddings.federation import validate_incoming_belief_embedding
+        from our_embeddings.federation import validate_incoming_belief_embedding
 
         belief_data = {
             "content": "Test belief",
@@ -180,7 +180,7 @@ class TestIncomingBeliefValidation:
         assert error is None
 
     def test_belief_without_embedding_is_valid(self):
-        from oro_embeddings.federation import validate_incoming_belief_embedding
+        from our_embeddings.federation import validate_incoming_belief_embedding
 
         belief_data = {"content": "Test belief without embedding"}
 
@@ -189,7 +189,7 @@ class TestIncomingBeliefValidation:
         assert error is None
 
     def test_belief_with_wrong_model_fails(self):
-        from oro_embeddings.federation import validate_incoming_belief_embedding
+        from our_embeddings.federation import validate_incoming_belief_embedding
 
         belief_data = {
             "content": "Test belief",
@@ -202,7 +202,7 @@ class TestIncomingBeliefValidation:
         assert "model mismatch" in error.lower()
 
     def test_belief_with_wrong_dims_fails(self):
-        from oro_embeddings.federation import validate_incoming_belief_embedding
+        from our_embeddings.federation import validate_incoming_belief_embedding
 
         belief_data = {
             "content": "Test belief",
@@ -215,7 +215,7 @@ class TestIncomingBeliefValidation:
         assert "dimensions mismatch" in error.lower()
 
     def test_belief_with_wrong_type_fails(self):
-        from oro_embeddings.federation import validate_incoming_belief_embedding
+        from our_embeddings.federation import validate_incoming_belief_embedding
 
         belief_data = {
             "content": "Test belief",
@@ -228,7 +228,7 @@ class TestIncomingBeliefValidation:
         assert "type mismatch" in error.lower()
 
     def test_belief_with_invalid_embedding_fails(self):
-        from oro_embeddings.federation import validate_incoming_belief_embedding
+        from our_embeddings.federation import validate_incoming_belief_embedding
 
         belief_data = {
             "content": "Test belief",
@@ -243,20 +243,20 @@ class TestRegenerateEmbedding:
     """Tests for regenerate_embedding_if_needed()."""
 
     def test_regenerate_requires_content(self):
-        from oro_embeddings.federation import regenerate_embedding_if_needed
+        from our_embeddings.federation import regenerate_embedding_if_needed
 
         with pytest.raises(ValueError, match="no content"):
             regenerate_embedding_if_needed({})
 
     def test_regenerate_empty_content(self):
-        from oro_embeddings.federation import regenerate_embedding_if_needed
+        from our_embeddings.federation import regenerate_embedding_if_needed
 
         with pytest.raises(ValueError, match="no content"):
             regenerate_embedding_if_needed({"content": ""})
 
-    @patch("oro_embeddings.providers.local.generate_embedding")
+    @patch("our_embeddings.providers.local.generate_embedding")
     def test_regenerate_calls_local_provider(self, mock_generate):
-        from oro_embeddings.federation import regenerate_embedding_if_needed
+        from our_embeddings.federation import regenerate_embedding_if_needed
 
         mock_embedding = [0.1] * 384
         mock_generate.return_value = mock_embedding
@@ -292,10 +292,10 @@ class TestPrepareBeliefForFederation:
         }
 
     @pytest.mark.asyncio
-    @patch("oro_db.get_cursor")
-    @patch("oro_embeddings.providers.local.generate_embedding")
+    @patch("our_db.get_cursor")
+    @patch("our_embeddings.providers.local.generate_embedding")
     async def test_prepare_generates_embedding(self, mock_generate, mock_cursor, mock_db_row):
-        from oro_embeddings.federation import prepare_belief_for_federation
+        from our_embeddings.federation import prepare_belief_for_federation
 
         mock_cur = MagicMock()
         mock_cur.fetchone.return_value = mock_db_row
@@ -318,9 +318,9 @@ class TestPrepareBeliefForFederation:
         mock_generate.assert_called_once_with("Test belief content")
 
     @pytest.mark.asyncio
-    @patch("oro_db.get_cursor")
+    @patch("our_db.get_cursor")
     async def test_prepare_uses_existing_compatible_embedding(self, mock_cursor, mock_db_row):
-        from oro_embeddings.federation import prepare_belief_for_federation
+        from our_embeddings.federation import prepare_belief_for_federation
 
         mock_db_row["embedding_type"] = "bge_small_en_v15"
         mock_db_row["dimensions"] = 384
@@ -339,9 +339,9 @@ class TestPrepareBeliefForFederation:
         assert result["embedding_model"] == "BAAI/bge-small-en-v1.5"
 
     @pytest.mark.asyncio
-    @patch("oro_db.get_cursor")
+    @patch("our_db.get_cursor")
     async def test_prepare_raises_for_missing_belief(self, mock_cursor):
-        from oro_embeddings.federation import prepare_belief_for_federation
+        from our_embeddings.federation import prepare_belief_for_federation
 
         mock_cur = MagicMock()
         mock_cur.fetchone.return_value = None
@@ -351,9 +351,9 @@ class TestPrepareBeliefForFederation:
             await prepare_belief_for_federation("nonexistent-id")
 
     @pytest.mark.asyncio
-    @patch("oro_db.get_cursor")
+    @patch("our_db.get_cursor")
     async def test_prepare_raises_for_private_belief(self, mock_cursor, mock_db_row):
-        from oro_embeddings.federation import prepare_belief_for_federation
+        from our_embeddings.federation import prepare_belief_for_federation
 
         mock_db_row["visibility"] = "private"
 
@@ -369,7 +369,7 @@ class TestModuleExports:
     """Test that module exports are correctly exposed."""
 
     def test_federation_exports_in_init(self):
-        from oro_embeddings import (
+        from our_embeddings import (
             FEDERATION_EMBEDDING_MODEL,
             get_federation_standard,
             is_federation_compatible,

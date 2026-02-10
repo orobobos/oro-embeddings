@@ -1,4 +1,4 @@
-"""Tests for oro_embeddings.registry module."""
+"""Tests for our_embeddings.registry module."""
 
 from __future__ import annotations
 
@@ -11,7 +11,7 @@ class TestEmbeddingType:
     """Tests for EmbeddingType dataclass."""
 
     def test_create(self):
-        from oro_embeddings.registry import EmbeddingType
+        from our_embeddings.registry import EmbeddingType
 
         et = EmbeddingType(
             id="openai_text3_small",
@@ -27,14 +27,14 @@ class TestEmbeddingType:
         assert et.is_default is True
 
     def test_default_values(self):
-        from oro_embeddings.registry import EmbeddingType
+        from our_embeddings.registry import EmbeddingType
 
         et = EmbeddingType(id="test", provider="openai", model="test-model", dimensions=1536)
         assert et.is_default is False
         assert et.status == "active"
 
     def test_to_dict(self):
-        from oro_embeddings.registry import EmbeddingType
+        from our_embeddings.registry import EmbeddingType
 
         et = EmbeddingType(id="test", provider="openai", model="test-model", dimensions=1536, is_default=True)
         d = et.to_dict()
@@ -43,7 +43,7 @@ class TestEmbeddingType:
         assert d["is_default"] is True
 
     def test_from_row(self):
-        from oro_embeddings.registry import EmbeddingType
+        from our_embeddings.registry import EmbeddingType
 
         row = {
             "id": "openai_text3_small",
@@ -71,11 +71,11 @@ class TestGetEmbeddingType:
         def fake_get_cursor(dict_cursor=True):
             yield mock_cursor
 
-        with patch("oro_embeddings.registry.get_cursor", fake_get_cursor):
+        with patch("our_embeddings.registry.get_cursor", fake_get_cursor):
             yield mock_cursor
 
     def test_by_id(self, mock_get_cursor):
-        from oro_embeddings.registry import get_embedding_type
+        from our_embeddings.registry import get_embedding_type
 
         mock_get_cursor.fetchone.return_value = {
             "id": "openai_text3_small",
@@ -90,7 +90,7 @@ class TestGetEmbeddingType:
         assert result.id == "openai_text3_small"
 
     def test_default(self, mock_get_cursor):
-        from oro_embeddings.registry import get_embedding_type
+        from our_embeddings.registry import get_embedding_type
 
         mock_get_cursor.fetchone.return_value = {
             "id": "default_type",
@@ -105,7 +105,7 @@ class TestGetEmbeddingType:
         assert result.is_default is True
 
     def test_not_found(self, mock_get_cursor):
-        from oro_embeddings.registry import get_embedding_type
+        from our_embeddings.registry import get_embedding_type
 
         mock_get_cursor.fetchone.return_value = None
         result = get_embedding_type("nonexistent")
@@ -125,11 +125,11 @@ class TestListEmbeddingTypes:
         def fake_get_cursor(dict_cursor=True):
             yield mock_cursor
 
-        with patch("oro_embeddings.registry.get_cursor", fake_get_cursor):
+        with patch("our_embeddings.registry.get_cursor", fake_get_cursor):
             yield mock_cursor
 
     def test_list_all(self, mock_get_cursor):
-        from oro_embeddings.registry import list_embedding_types
+        from our_embeddings.registry import list_embedding_types
 
         mock_get_cursor.fetchall.return_value = [
             {
@@ -153,7 +153,7 @@ class TestListEmbeddingTypes:
         assert len(result) == 2
 
     def test_filter_by_status(self, mock_get_cursor):
-        from oro_embeddings.registry import list_embedding_types
+        from our_embeddings.registry import list_embedding_types
 
         mock_get_cursor.fetchall.return_value = []
         list_embedding_types(status="active")
@@ -174,11 +174,11 @@ class TestRegisterEmbeddingType:
         def fake_get_cursor(dict_cursor=True):
             yield mock_cursor
 
-        with patch("oro_embeddings.registry.get_cursor", fake_get_cursor):
+        with patch("our_embeddings.registry.get_cursor", fake_get_cursor):
             yield mock_cursor
 
     def test_create_new(self, mock_get_cursor):
-        from oro_embeddings.registry import register_embedding_type
+        from our_embeddings.registry import register_embedding_type
 
         mock_get_cursor.fetchone.return_value = {
             "id": "new_type",
@@ -192,7 +192,7 @@ class TestRegisterEmbeddingType:
         assert result.id == "new_type"
 
     def test_set_as_default(self, mock_get_cursor):
-        from oro_embeddings.registry import register_embedding_type
+        from our_embeddings.registry import register_embedding_type
 
         mock_get_cursor.fetchone.return_value = {
             "id": "new_default",
@@ -221,13 +221,13 @@ class TestEnsureDefaultType:
         def fake_get_cursor(dict_cursor=True):
             yield mock_cursor
 
-        with patch("oro_embeddings.registry.get_cursor", fake_get_cursor):
+        with patch("our_embeddings.registry.get_cursor", fake_get_cursor):
             yield mock_cursor
 
     def test_returns_existing(self, mock_get_cursor):
-        from oro_embeddings.registry import EmbeddingType, ensure_default_type
+        from our_embeddings.registry import EmbeddingType, ensure_default_type
 
-        with patch("oro_embeddings.registry.get_embedding_type") as mock_get:
+        with patch("our_embeddings.registry.get_embedding_type") as mock_get:
             mock_get.return_value = EmbeddingType(
                 id="existing_default",
                 provider="openai",
@@ -239,11 +239,11 @@ class TestEnsureDefaultType:
             assert result.id == "existing_default"
 
     def test_creates_default(self, mock_get_cursor):
-        from oro_embeddings.registry import EmbeddingType, ensure_default_type
+        from our_embeddings.registry import EmbeddingType, ensure_default_type
 
-        with patch("oro_embeddings.registry.get_embedding_type") as mock_get:
+        with patch("our_embeddings.registry.get_embedding_type") as mock_get:
             mock_get.return_value = None
-            with patch("oro_embeddings.registry.register_embedding_type") as mock_register:
+            with patch("our_embeddings.registry.register_embedding_type") as mock_register:
                 mock_register.return_value = EmbeddingType(
                     id="openai_text3_small",
                     provider="openai",
@@ -258,18 +258,18 @@ class TestEnsureDefaultType:
 
 class TestKnownEmbeddings:
     def test_contains_text3_small(self):
-        from oro_embeddings.registry import KNOWN_EMBEDDINGS
+        from our_embeddings.registry import KNOWN_EMBEDDINGS
 
         assert "openai_text3_small" in KNOWN_EMBEDDINGS
         assert KNOWN_EMBEDDINGS["openai_text3_small"]["dimensions"] == 1536
 
     def test_contains_text3_large(self):
-        from oro_embeddings.registry import KNOWN_EMBEDDINGS
+        from our_embeddings.registry import KNOWN_EMBEDDINGS
 
         assert "openai_text3_large" in KNOWN_EMBEDDINGS
         assert KNOWN_EMBEDDINGS["openai_text3_large"]["dimensions"] == 3072
 
     def test_contains_ada(self):
-        from oro_embeddings.registry import KNOWN_EMBEDDINGS
+        from our_embeddings.registry import KNOWN_EMBEDDINGS
 
         assert "openai_ada_002" in KNOWN_EMBEDDINGS

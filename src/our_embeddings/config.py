@@ -1,4 +1,4 @@
-"""Configuration for oro-embeddings.
+"""Configuration for our-embeddings.
 
 Reads embedding-related settings from environment variables.
 Maintains backward compatibility with VALENCE_EMBEDDING_* env var names.

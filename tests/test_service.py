@@ -9,6 +9,14 @@ import pytest
 
 from our_embeddings.exceptions import EmbeddingError
 
+_st_available = True
+try:
+    import sentence_transformers  # noqa: F401
+except ImportError:
+    _st_available = False
+
+requires_sentence_transformers = pytest.mark.skipif(not _st_available, reason="sentence-transformers not installed")
+
 # ============================================================================
 # get_openai_client Tests
 # ============================================================================
@@ -138,6 +146,7 @@ class TestVectorToPgvector:
 # ============================================================================
 
 
+@requires_sentence_transformers
 class TestEmbedContent:
     """Tests for embed_content function."""
 
@@ -215,6 +224,7 @@ class TestEmbedContent:
 # ============================================================================
 
 
+@requires_sentence_transformers
 class TestSearchSimilar:
     """Tests for search_similar function."""
 

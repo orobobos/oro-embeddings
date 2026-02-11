@@ -10,6 +10,14 @@ import pytest
 
 from our_embeddings.config import clear_config_cache
 
+_st_available = True
+try:
+    import sentence_transformers  # noqa: F401
+except ImportError:
+    _st_available = False
+
+requires_sentence_transformers = pytest.mark.skipif(not _st_available, reason="sentence-transformers not installed")
+
 
 class TestIsLocalPath:
     def test_absolute_path_detected(self, tmp_path):
@@ -37,6 +45,7 @@ class TestIsLocalPath:
         assert local._is_local_path("sentence-transformers/all-MiniLM-L6-v2") is False
 
 
+@requires_sentence_transformers
 class TestGetModel:
     def test_lazy_loading(self):
         from our_embeddings.providers import local
@@ -241,6 +250,7 @@ class TestResetModel:
         assert local._model is None
 
 
+@requires_sentence_transformers
 class TestOfflineSupport:
     def test_loads_from_local_path(self, tmp_path):
         from our_embeddings.providers import local

@@ -79,8 +79,7 @@ def get_model() -> SentenceTransformer:
                     from sentence_transformers import SentenceTransformer
                 except ImportError as e:
                     raise ModelLoadError(
-                        "sentence-transformers not installed. "
-                        "Install with: pip install sentence-transformers"
+                        "sentence-transformers not installed. Install with: pip install sentence-transformers"
                     ) from e
 
                 from ..config import get_config

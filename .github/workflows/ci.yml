@@ -15,6 +15,10 @@ concurrency:
 jobs:
   lint:
     uses: ourochronos/our-infra/.github/workflows/lint.yml@main
+    with:
+      extra-install: "git+https://github.com/ourochronos/our-db.git"
   test:
     needs: lint
     uses: ourochronos/our-infra/.github/workflows/test.yml@main
+    with:
+      extra-install: "git+https://github.com/ourochronos/our-db.git"

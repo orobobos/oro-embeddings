@@ -160,12 +160,12 @@ def embed_content(
             )
         elif content_type == "exchange":
             cur.execute(
-                "UPDATE exchanges SET embedding = %s WHERE id = %s",
+                "UPDATE vkb_exchanges SET embedding = %s WHERE id = %s",
                 (vector_str, content_id),
             )
         elif content_type == "pattern":
             cur.execute(
-                "UPDATE patterns SET embedding = %s WHERE id = %s",
+                "UPDATE vkb_patterns SET embedding = %s WHERE id = %s",
                 (vector_str, content_id),
             )
 
@@ -253,7 +253,7 @@ def search_similar(
             cur.execute(
                 """
                 SELECT id, session_id, content, 1 - (embedding <=> %s::vector) as similarity
-                FROM exchanges
+                FROM vkb_exchanges
                 WHERE embedding IS NOT NULL
                 AND 1 - (embedding <=> %s::vector) >= %s
                 ORDER BY embedding <=> %s::vector
@@ -276,7 +276,7 @@ def search_similar(
             cur.execute(
                 """
                 SELECT id, type, description, 1 - (embedding <=> %s::vector) as similarity
-                FROM patterns
+                FROM vkb_patterns
                 WHERE embedding IS NOT NULL
                 AND 1 - (embedding <=> %s::vector) >= %s
                 ORDER BY embedding <=> %s::vector
